@@ -30,6 +30,7 @@ var (
 	aEnableURLSource    = flag.Bool("enable-url-source", false, "Enable remote HTTP URL image source processing")
 	aEnablePlaceholder  = flag.Bool("enable-placeholder", false, "Enable image response placeholder to be used in case of error")
 	aEnableURLSignature = flag.Bool("enable-url-signature", false, "Enable URL signature (URL-safe Base64-encoded HMAC digest)")
+	aEnableAccessLogs   = flag.Bool("enable-access-logs", true, "Enable access logs (apache compatible, otherwise log nothing)")
 	aURLSignatureKey    = flag.String("url-signature-key", "", "The URL signature key (32 characters minimum)")
 	aAllowedOrigins     = flag.String("allowed-origins", "", "Restrict remote image source processing to certain origins (separated by commas). Note: Origins are validated against host *AND* path.")
 	aMaxAllowedSize     = flag.Int("max-allowed-size", 0, "Restrict maximum size of http image source (in bytes)")
@@ -88,6 +89,7 @@ Options:
   -enable-auth-forwarding   Forwards X-Forward-Authorization or Authorization header to the image source server. -enable-url-source flag must be defined. Tip: secure your server from public access to prevent attack vectors
   -forward-headers          Forwards custom headers to the image source server. -enable-url-source flag must be defined.
   -enable-url-signature     Enable URL signature (URL-safe Base64-encoded HMAC digest) [default: false]
+  -enable-access-logs	    Enable access logs (apache compatible, otherwise log nothing) [default: true]
   -url-signature-key        The URL signature key (32 characters minimum)
   -allowed-origins <urls>   Restrict remote image source processing to certain origins (separated by commas)
   -max-allowed-size <bytes> Restrict maximum size of http image source (in bytes)
@@ -133,6 +135,7 @@ func main() {
 		EnableURLSource:    *aEnableURLSource,
 		EnablePlaceholder:  *aEnablePlaceholder,
 		EnableURLSignature: *aEnableURLSignature,
+		EnableAccessLogs:   *aEnableAccessLogs,
 		URLSignatureKey:    urlSignature.Key,
 		PathPrefix:         *aPathPrefix,
 		APIKey:             *aKey,

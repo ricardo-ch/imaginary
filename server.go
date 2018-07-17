@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -24,6 +25,7 @@ type ServerOptions struct {
 	EnableURLSource    bool
 	EnablePlaceholder  bool
 	EnableURLSignature bool
+	EnableAccessLogs   bool
 	URLSignatureKey    string
 	Address            string
 	PathPrefix         string
@@ -56,7 +58,11 @@ func (e Endpoints) IsValid(r *http.Request) bool {
 
 func Server(o ServerOptions) error {
 	addr := o.Address + ":" + strconv.Itoa(o.Port)
-	handler := NewLog(NewServerMux(o), os.Stdout)
+	writer := ioutil.Discard
+	if o.EnableAccessLogs {
+		writer = os.Stdout
+	}
+	handler := NewLog(NewServerMux(o), writer)
 
 	server := &http.Server{
 		Addr:           addr,
