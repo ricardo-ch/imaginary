@@ -1,5 +1,7 @@
 # imaginary [![Build Status](https://travis-ci.org/h2non/imaginary.png)](https://travis-ci.org/h2non/imaginary) [![Docker](https://img.shields.io/badge/docker-h2non/imaginary-blue.svg)](https://hub.docker.com/r/h2non/imaginary/) [![Docker Registry](https://img.shields.io/docker/pulls/h2non/imaginary.svg)](https://hub.docker.com/r/h2non/imaginary/) [![Go Report Card](http://goreportcard.com/badge/h2non/imaginary)](http://goreportcard.com/report/h2non/imaginary)
 
+# imaginary ricardo [![Docker](https://img.shields.io/badge/docker-ricardoch/imaginary-blue.svg)](https://hub.docker.com/r/ricardoch/imaginary/) [![Docker Registry](https://img.shields.io/docker/pulls/ricardoch/imaginary.svg)](https://hub.docker.com/r/ricardoch/imaginary/)
+
 **[Fast](#benchmarks) HTTP [microservice](http://microservices.io/patterns/microservices.html)** written in Go **for high-level image processing** backed by [bimg](https://github.com/h2non/bimg) and [libvips](https://github.com/jcupitt/libvips). `imaginary` can be used as private or public HTTP service for massive image processing with first-class support for [Docker](#docker) & [Heroku](#heroku).
 It's almost dependency-free and only uses [`net/http`](http://golang.org/pkg/net/http/) native package without additional abstractions for better [performance](#performance).
 
@@ -80,6 +82,7 @@ go get -u github.com/h2non/imaginary
 ```
 
 Also, be sure you have the latest version of `bimg`:
+
 ```bash
 go get -u gopkg.in/h2non/bimg.v1
 ```
@@ -87,6 +90,7 @@ go get -u gopkg.in/h2non/bimg.v1
 ### libvips
 
 Run the following script as `sudo` (supports OSX, Debian/Ubuntu, Redhat, Fedora, Amazon Linux):
+
 ```bash
 curl -s https://raw.githubusercontent.com/h2non/bimg/master/preinstall.sh | sudo bash -
 ```
@@ -98,26 +102,31 @@ The [install script](https://github.com/h2non/bimg/blob/master/preinstall.sh) re
 See [Dockerfile](https://github.com/h2non/imaginary/blob/master/Dockerfile) for image details.
 
 Fetch the image (comes with latest stable Go and `libvips` versions)
+
 ```
 docker pull h2non/imaginary
 ```
 
 Start the container with optional flags (default listening on port 9000)
+
 ```
 docker run -p 9000:9000 h2non/imaginary -cors -gzip
 ```
 
 Start the container in debug mode:
+
 ```
 docker run -p 9000:9000 -e "DEBUG=*" h2non/imaginary
 ```
 
 Enter to the interactive shell in a running container
+
 ```
 sudo docker exec -it <containerIdOrName> bash
 ```
 
 Stop the container
+
 ```
 docker stop h2non/imaginary
 ```
@@ -127,7 +136,7 @@ You can see all the Docker tags [here](https://hub.docker.com/r/h2non/imaginary/
 Alternatively you may add imaginary to your `docker-compose.yml` file:
 
 ```yaml
-version: "3"
+version: '3'
 services:
   imaginary:
     image: h2non/imaginary:latest
@@ -135,10 +144,10 @@ services:
     volumes:
       - images:/mnt/data
     environment:
-       PORT: 9000
+      PORT: 9000
     command: -enable-url-source -mount /mnt/data
     ports:
-      - "9000:9000"
+      - '9000:9000'
 ```
 
 ### Heroku
@@ -150,26 +159,31 @@ Click on the Heroku button to easily deploy your app:
 Or alternatively you can follow the manual steps:
 
 Clone this repository:
+
 ```
 git clone https://github.com/h2non/imaginary.git
 ```
 
 Set the buildpack for your application
+
 ```
 heroku config:add BUILDPACK_URL=https://github.com/h2non/heroku-buildpack-imaginary.git
 ```
 
 Optionally, define the PKGCONFIG path:
+
 ```
 heroku config:add PKG_CONFIG_PATH=/app/vendor/vips/lib/pkgconfig
 ```
 
 Add Heroku git remote:
+
 ```
 heroku git:remote -a your-application
 ```
 
 Deploy it!
+
 ```
 git push heroku master
 ```
@@ -179,21 +193,25 @@ git push heroku master
 Assuming you have cloudfoundry account, [bluemix](https://console.ng.bluemix.net/) or [pivotal](https://console.run.pivotal.io/) and [command line utility installed](https://github.com/cloudfoundry/cli).
 
 Clone this repository:
+
 ```
 git clone https://github.com/h2non/imaginary.git
 ```
 
 Push the application
+
 ```
 cf push -b https://github.com/yacloud-io/go-buildpack-imaginary.git imaginary-inst01 --no-start
 ```
 
 Define the library path
+
 ```
 cf set-env imaginary-inst01 LD_LIBRARY_PATH /home/vcap/app/vendor/vips/lib
 ```
 
 Start the application
+
 ```
 cf start imaginary-inst01
 ```
@@ -214,6 +232,7 @@ In production focused environments it's highly recommended to enable the HTTP co
 The recommended concurrency limit per server to guarantee a good performance is up to `20` requests per second.
 
 You can enable it simply passing a flag to the binary:
+
 ```
 $ imaginary -concurrency 20
 ```
@@ -232,7 +251,7 @@ Assuming that you want to provide a high availability to deal efficiently with, 
         |==============|
         |   Balancer   |
         |==============|
-           |       |   
+           |       |
           /         \
          /           \
         /             \
@@ -318,7 +337,7 @@ Options:
   -forward-headers          Forwards custom headers to the image source server. -enable-url-source flag must be defined.
   -enable-url-signature     Enable URL signature (URL-safe Base64-encoded HMAC digest) [default: false]
   -url-signature-key        The URL signature key (32 characters minimum)
-  -allowed-origins <urls>   Restrict remote image source processing to certain origins (separated by commas). Note: Origins are validated against host *AND* path. 
+  -allowed-origins <urls>   Restrict remote image source processing to certain origins (separated by commas). Note: Origins are validated against host *AND* path.
   -max-allowed-size <bytes> Restrict maximum size of http image source (in bytes)
   -certfile <path>          TLS certificate file path
   -keyfile <path>           TLS private key file path
@@ -332,43 +351,51 @@ Options:
 ```
 
 Start the server in a custom port:
+
 ```bash
 imaginary -p 8080
 ```
 
 Also, you can pass the port as environment variable:
+
 ```bash
 PORT=8080 imaginary
 ```
 
 Enable HTTP server throttle strategy (max 10 requests/second):
+
 ```
 imaginary -p 8080 -concurrency 10
 ```
 
 Enable remote URL image fetching (then you can do GET request passing the `url=http://server.com/image.jpg` query param):
+
 ```
 imaginary -p 8080 -enable-url-source
 ```
 
 Mount local directory (then you can do GET request passing the `file=image.jpg` query param):
+
 ```
 imaginary -p 8080 -mount ~/images
 ```
 
 Enable authorization header forwarding to image origin server. `X-Forward-Authorization` or `Authorization` (by priority) header value will be forwarded as `Authorization` header to the target origin server, if one of those headers are present in the incoming HTTP request.
 Security tip: secure your server from public access to prevent attack vectors when enabling this option:
+
 ```
 imaginary -p 8080 -enable-url-source -enable-auth-forwarding
 ```
 
 Or alternatively you can manually define an constant Authorization header value that will be always sent when fetching images from remote image origins. If defined, `X-Forward-Authorization` or `Authorization` headers won't be forwarded, and therefore ignored, if present.
 **Note**:
+
 ```
 imaginary -p 8080 -enable-url-source -authorization "Bearer s3cr3t"
 ```
 
 Send fixed caching headers in the response. The headers can be set in either "cache nothing" or "cache for N seconds". By specifying `0` imaginary will send the "don't cache" headers, otherwise it sends headers with a TTL. The following example informs the client to cache the result for 1 year:
+
 ```
 imaginary -p 8080 -enable-url-source -http-cache-ttl 31556926
 ```
@@ -379,6 +406,7 @@ Also, the placeholder image will be also transparently converted to the desired 
 
 This feature is particularly useful when using `imaginary` as public HTTP service consumed by Web clients.
 In case of error, the appropriate HTTP status code will be used to reflect the error, and the error details will be exposed serialized as JSON in the `Error` response HTTP header, for further inspection and convenience for API clients.
+
 ```
 imaginary -p 8080 -enable-placeholder -enable-url-source
 ```
@@ -386,6 +414,7 @@ imaginary -p 8080 -enable-placeholder -enable-url-source
 You can optionally use a custom placeholder image.
 Since the placeholder image should fit a variety of different sizes, it's recommended to use a large image, such as `1200`x`1200`.
 Supported custom placeholder image types are: `JPEG`, `PNG` and `WEBP`.
+
 ```
 imaginary -p 8080 -placeholder=placeholder.jpg -enable-url-source
 ```
@@ -393,26 +422,31 @@ imaginary -p 8080 -placeholder=placeholder.jpg -enable-url-source
 Enable URL signature (URL-safe Base64-encoded HMAC digest).
 
 This feature is particularly useful to protect against multiple image operations attacks and to verify the requester identity.
+
 ```
 imaginary -p 8080 -enable-url-signature -url-signature-key 4f46feebafc4b5e988f131c4ff8b5997
 ```
 
 It is recommanded to pass key as environment variables:
+
 ```
 URL_SIGNATURE_KEY=4f46feebafc4b5e988f131c4ff8b5997 imaginary -p 8080 -enable-url-signature
 ```
 
 Increase libvips threads concurrency (experimental):
+
 ```
 VIPS_CONCURRENCY=10 imaginary -p 8080 -concurrency 10
 ```
 
 Enable debug mode:
+
 ```
 DEBUG=* imaginary -p 8080
 ```
 
 Or filter debug output by package:
+
 ```
 DEBUG=imaginary imaginary -p 8080
 ```
@@ -420,20 +454,22 @@ DEBUG=imaginary imaginary -p 8080
 #### Examples
 
 Reading a local image (you must pass the `-mount=<directory>` flag):
+
 ```
 curl -O "http://localhost:8088/crop?width=500&height=400&file=foo/bar/image.jpg"
 ```
 
 Fetching the image from a remote server (you must pass the `-enable-url-source` flag):
+
 ```
 curl -O "http://localhost:8088/crop?width=500&height=400&url=https://raw.githubusercontent.com/h2non/imaginary/master/testdata/large.jpg"
 ```
 
 Crop behaviour can be influenced with the `gravity` parameter. You can specify a preference for a certain region (north, south, etc.). To enable Smart Crop you can specify the value "smart" to autodetect the most interesting section to consider as center point for the crop operation:
+
 ```
 curl -O "http://localhost:8088/crop?width=500&height=200&gravity=smart&url=https://raw.githubusercontent.com/h2non/imaginary/master/testdata/smart-crop.jpg"
 ```
-
 
 #### Playground
 
@@ -445,14 +481,14 @@ curl -O "http://localhost:8088/crop?width=500&height=200&gravity=smart&url=https
 
 imaginary can be configured to block all requests for images with a src URL this is not specified in the `allowed-origins` list. Imaginary will validate that the remote url matches the hostname and path of at least one origin in allowed list. Perhaps the easiest way to show how this works is to show some examples.
 
-| `allowed-origins` setting | image url | is valid |
-| ------------------------- | --------- | -------- |
-| `--allowed-origns s3.amazonaws.com/some-bucket/` | `s3.amazonaws.com/some-bucket/images/image.png` | VALID |
-| `--allowed-origns s3.amazonaws.com/some-bucket/` | `s3.amazonaws.com/images/image.png` | NOT VALID (no matching basepath) |
-| `--allowed-origns *.amazonaws.com/some-bucket/` | `anysubdomain.amazonaws.com/some-bucket/images/image.png` | VALID |
-| `--allowed-origns *.amazonaws.com` | `anysubdomain.amazonaws.comimages/image.png` | VALID |
-| `--allowed-origns *.amazonaws.com` | `www.notaws.comimages/image.png` | NOT VALID (no matching host) |
-| `--allowed-origns *.amazonaws.com, foo.amazonaws.com/some-bucket/` | `bar.amazonaws.com/some-other-bucket/image.png` | VALID (matches first condition but not second) |
+| `allowed-origins` setting                                          | image url                                                 | is valid                                       |
+| ------------------------------------------------------------------ | --------------------------------------------------------- | ---------------------------------------------- |
+| `--allowed-origns s3.amazonaws.com/some-bucket/`                   | `s3.amazonaws.com/some-bucket/images/image.png`           | VALID                                          |
+| `--allowed-origns s3.amazonaws.com/some-bucket/`                   | `s3.amazonaws.com/images/image.png`                       | NOT VALID (no matching basepath)               |
+| `--allowed-origns *.amazonaws.com/some-bucket/`                    | `anysubdomain.amazonaws.com/some-bucket/images/image.png` | VALID                                          |
+| `--allowed-origns *.amazonaws.com`                                 | `anysubdomain.amazonaws.comimages/image.png`              | VALID                                          |
+| `--allowed-origns *.amazonaws.com`                                 | `www.notaws.comimages/image.png`                          | NOT VALID (no matching host)                   |
+| `--allowed-origns *.amazonaws.com, foo.amazonaws.com/some-bucket/` | `bar.amazonaws.com/some-other-bucket/image.png`           | VALID (matches first condition but not second) |
 
 ### Authorization
 
@@ -462,6 +498,7 @@ To enable it, you should pass the `-key` flag to the binary.
 API token can be defined as HTTP header (`API-Key`) or query param (`key`).
 
 Example request with API key:
+
 ```
 POST /crop HTTP/1.1
 Host: localhost:8088
@@ -475,6 +512,7 @@ The URL signature is provided by the `sign` request parameter.
 The HMAC-SHA256 hash is created by taking the URL path (including the leading /), the request parameters (alphabetically-sorted and concatenated with & into a string). The hash is then base64url-encoded.
 
 Here an example in Go:
+
 ```
 signKey  := "4f46feebafc4b5e988f131c4ff8b5997"
 urlPath  := "/resize"
@@ -493,6 +531,7 @@ fmt.Println("sign=" + base64.RawURLEncoding.EncodeToString(buf))
 `imaginary` will always reply with the proper HTTP status code and JSON body with error details.
 
 Here an example response error when the payload is empty:
+
 ```json
 {
   "message": "Cannot read payload: no such file",
@@ -526,51 +565,53 @@ If you're pushing images to `imaginary` as `multipart/form-data` (you can do it 
 Complete list of available params. Take a look to each specific endpoint to see which params are supported.
 Image measures are always in pixels, unless otherwise indicated.
 
-- **width**       `int`   - Width of image area to extract/resize
-- **height**      `int`   - Height of image area to extract/resize
-- **top**         `int`   - Top edge of area to extract. Example: `100`
-- **left**        `int`   - Left edge of area to extract. Example: `100`
-- **areawidth**   `int`   - Height area to extract. Example: `300`
-- **areaheight**  `int`   - Width area to extract. Example: `300`
-- **quality**     `int`   - JPEG image quality between 1-100. Defaults to `80`
-- **compression** `int`   - PNG compression level. Default: `6`
-- **rotate**      `int`   - Image rotation angle. Must be multiple of `90`. Example: `180`
-- **factor**      `int`   - Zoom factor level. Example: `2`
-- **margin**      `int`   - Text area margin for watermark. Example: `50`
-- **dpi**         `int`   - DPI value for watermark. Example: `150`
-- **textwidth**   `int`   - Text area width for watermark. Example: `200`
-- **opacity**     `float` - Opacity level for watermark text or watermark image. Default: `0.2`
-- **flip**        `bool`  - Transform the resultant image with flip operation. Default: `false`
-- **flop**        `bool`  - Transform the resultant image with flop operation. Default: `false`
-- **force**       `bool`  - Force image transformation size. Default: `false`
-- **nocrop**      `bool`  - Disable crop transformation. Defaults depend on the operation
-- **noreplicate** `bool`  - Disable text replication in watermark. Defaults to `false`
-- **norotation**  `bool`  - Disable auto rotation based on EXIF orientation. Defaults to `false`
-- **noprofile**   `bool`  - Disable adding ICC profile metadata. Defaults to `false`
-- **stripmeta**   `bool`  - Remove original image metadata, such as EXIF metadata. Defaults to `false`
-- **text**        `string` - Watermark text content. Example: `copyright (c) 2189`
-- **font**        `string` - Watermark text font type and format. Example: `sans bold 12`
-- **color**       `string` - Watermark text RGB decimal base color. Example: `255,200,150`
-- **image**       `string` - Watermark image URL pointing to the remote HTTP server.
-- **type**        `string` - Specify the image format to output. Possible values are: `jpeg`, `png`, `webp` and `auto`. `auto` will use the preferred format requested by the client in the HTTP Accept header. A client can provide multiple comma-separated choices in `Accept` with the best being the one picked.
-- **gravity**     `string` - Define the crop operation gravity. Supported values are: `north`, `south`, `centre`, `west`, `east` and `smart`. Defaults to `centre`.
-- **file**        `string` - Use image from server local file path. In order to use this you must pass the `-mount=<dir>` flag.
-- **url**         `string` - Fetch the image from a remote HTTP server. In order to use this you must pass the `-enable-url-source` flag.
-- **colorspace**  `string` - Use a custom color space for the output image. Allowed values are: `srgb` or `bw` (black&white)
-- **field**       `string` - Custom image form field name if using `multipart/form`. Defaults to: `file`
-- **extend**      `string` - Extend represents the image extend mode used when the edges of an image are extended. Allowed values are: `black`, `copy`, `mirror`, `white` and `background`. If `background` value is specified, you can define the desired extend RGB color via `background` param, such as `?extend=background&background=250,20,10`. For more info, see [libvips docs](http://www.vips.ecs.soton.ac.uk/supported/8.4/doc/html/libvips/libvips-conversion.html#VIPS-EXTEND-BACKGROUND:CAPS).
-- **background**  `string` - Background RGB decimal base color to use when flattening transparent PNGs. Example: `255,200,150`
-- **sigma**       `float`  - Size of the gaussian mask to use when blurring an image. Example: `15.0`
-- **minampl**     `float`  - Minimum amplitude of the gaussian filter to use when blurring an image. Default: Example: `0.5`
-- **operations**  `json`   - Pipeline of image operation transformations defined as URL safe encoded JSON array. See [pipeline](#get--post-pipeline) endpoints for more details.
-- **sign**        `string` - URL signature (URL-safe Base64-encoded HMAC digest)
+- **width** `int` - Width of image area to extract/resize
+- **height** `int` - Height of image area to extract/resize
+- **top** `int` - Top edge of area to extract. Example: `100`
+- **left** `int` - Left edge of area to extract. Example: `100`
+- **areawidth** `int` - Height area to extract. Example: `300`
+- **areaheight** `int` - Width area to extract. Example: `300`
+- **quality** `int` - JPEG image quality between 1-100. Defaults to `80`
+- **compression** `int` - PNG compression level. Default: `6`
+- **rotate** `int` - Image rotation angle. Must be multiple of `90`. Example: `180`
+- **factor** `int` - Zoom factor level. Example: `2`
+- **margin** `int` - Text area margin for watermark. Example: `50`
+- **dpi** `int` - DPI value for watermark. Example: `150`
+- **textwidth** `int` - Text area width for watermark. Example: `200`
+- **opacity** `float` - Opacity level for watermark text or watermark image. Default: `0.2`
+- **flip** `bool` - Transform the resultant image with flip operation. Default: `false`
+- **flop** `bool` - Transform the resultant image with flop operation. Default: `false`
+- **force** `bool` - Force image transformation size. Default: `false`
+- **nocrop** `bool` - Disable crop transformation. Defaults depend on the operation
+- **noreplicate** `bool` - Disable text replication in watermark. Defaults to `false`
+- **norotation** `bool` - Disable auto rotation based on EXIF orientation. Defaults to `false`
+- **noprofile** `bool` - Disable adding ICC profile metadata. Defaults to `false`
+- **stripmeta** `bool` - Remove original image metadata, such as EXIF metadata. Defaults to `false`
+- **text** `string` - Watermark text content. Example: `copyright (c) 2189`
+- **font** `string` - Watermark text font type and format. Example: `sans bold 12`
+- **color** `string` - Watermark text RGB decimal base color. Example: `255,200,150`
+- **image** `string` - Watermark image URL pointing to the remote HTTP server.
+- **type** `string` - Specify the image format to output. Possible values are: `jpeg`, `png`, `webp` and `auto`. `auto` will use the preferred format requested by the client in the HTTP Accept header. A client can provide multiple comma-separated choices in `Accept` with the best being the one picked.
+- **gravity** `string` - Define the crop operation gravity. Supported values are: `north`, `south`, `centre`, `west`, `east` and `smart`. Defaults to `centre`.
+- **file** `string` - Use image from server local file path. In order to use this you must pass the `-mount=<dir>` flag.
+- **url** `string` - Fetch the image from a remote HTTP server. In order to use this you must pass the `-enable-url-source` flag.
+- **colorspace** `string` - Use a custom color space for the output image. Allowed values are: `srgb` or `bw` (black&white)
+- **field** `string` - Custom image form field name if using `multipart/form`. Defaults to: `file`
+- **extend** `string` - Extend represents the image extend mode used when the edges of an image are extended. Allowed values are: `black`, `copy`, `mirror`, `white` and `background`. If `background` value is specified, you can define the desired extend RGB color via `background` param, such as `?extend=background&background=250,20,10`. For more info, see [libvips docs](http://www.vips.ecs.soton.ac.uk/supported/8.4/doc/html/libvips/libvips-conversion.html#VIPS-EXTEND-BACKGROUND:CAPS).
+- **background** `string` - Background RGB decimal base color to use when flattening transparent PNGs. Example: `255,200,150`
+- **sigma** `float` - Size of the gaussian mask to use when blurring an image. Example: `15.0`
+- **minampl** `float` - Minimum amplitude of the gaussian filter to use when blurring an image. Default: Example: `0.5`
+- **operations** `json` - Pipeline of image operation transformations defined as URL safe encoded JSON array. See [pipeline](#get--post-pipeline) endpoints for more details.
+- **sign** `string` - URL signature (URL-safe Base64-encoded HMAC digest)
 
 #### GET /
+
 Content-Type: `application/json`
 
 Serves as JSON the current `imaginary`, `bimg` and `libvips` versions.
 
 Example response:
+
 ```json
 {
   "imaginary": "0.1.28",
@@ -580,6 +621,7 @@ Example response:
 ```
 
 #### GET /health
+
 Content-Type: `application/json`
 
 Provides some useful statistics about the server stats with the following structure:
@@ -591,6 +633,7 @@ Provides some useful statistics about the server stats with the following struct
 - **cpus** `number` - Number of used CPU cores.
 
 Example response:
+
 ```json
 {
   "uptime": 1293,
@@ -602,14 +645,17 @@ Example response:
 ```
 
 #### GET /form
+
 Content Type: `text/html`
 
 Serves an ugly HTML form, just for testing/playground purposes
 
 #### GET | POST /info
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `application/json`
 
 Returns the image metadata as JSON:
+
 ```json
 {
   "width": 550,
@@ -624,6 +670,7 @@ Returns the image metadata as JSON:
 ```
 
 #### GET | POST /crop
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 Crop the image by a given width or height. Image ratio is maintained
@@ -653,8 +700,8 @@ Crop the image by a given width or height. Image ratio is maintained
 - gravity `string`
 - field `string` - Only POST and `multipart/form` payloads
 
-
 #### GET | POST /smartcrop
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 Crop the image by a given width or height using the [libvips](https://github.com/jcupitt/libvips/blob/master/libvips/conversion/smartcrop.c) built-in smart crop algorithm.
@@ -685,6 +732,7 @@ Crop the image by a given width or height using the [libvips](https://github.com
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /resize
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 Resize an image by width or height. Image aspect ratio is maintained
@@ -715,6 +763,7 @@ Resize an image by width or height. Image aspect ratio is maintained
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /enlarge
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -743,6 +792,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /extract
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -774,6 +824,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /zoom
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -803,6 +854,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /thumbnail
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -830,6 +882,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /fit
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 Resize an image to fit within width and height, without cropping. Image aspect ratio is maintained
@@ -860,6 +913,7 @@ The width and height specify a maximum bounding box for the image.
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /rotate
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -887,6 +941,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /flip
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -913,6 +968,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /flop
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -939,6 +995,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /convert
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -964,6 +1021,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /pipeline
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 This endpoint allow the user to declare a pipeline of multiple independent image transformation operations all in a single HTTP request.
@@ -973,6 +1031,7 @@ This endpoint allow the user to declare a pipeline of multiple independent image
 Internally, it operates pretty much as a sequential reducer pattern chain, where given an input image and a set of operations, for each independent image operation iteration, the output result image will be passed to the next one, as the accumulated result, until finishing all the operations.
 
 In imperative programming, this would be pretty much analog to the following code:
+
 ```js
 var image
 for operation in operations {
@@ -989,6 +1048,7 @@ for operation in operations {
 ##### Operations JSON specification
 
 Self-documented JSON operation schema:
+
 ```js
 [
   {
@@ -1052,6 +1112,7 @@ Self-documented JSON operation schema:
 ```
 
 #### GET | POST /watermark
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -1085,6 +1146,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /watermarkimage
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params
@@ -1114,6 +1176,7 @@ Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 - field `string` - Only POST and `multipart/form` payloads
 
 #### GET | POST /blur
+
 Accepts: `image/*, multipart/form-data`. Content-Type: `image/*`
 
 ##### Allowed params

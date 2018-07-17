@@ -1,7 +1,7 @@
 package main
 
 // Version stores the current package semantic version
-var Version = "dev"
+var Version = "1.1.1r"
 
 // Versions represents the used versions for several significant dependencies
 type Versions struct {
