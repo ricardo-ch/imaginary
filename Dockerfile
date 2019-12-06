@@ -75,6 +75,7 @@ COPY --from=builder /etc/ssl/certs /etc/ssl/certs
 RUN DEBIAN_FRONTEND=noninteractive \
   apt-get update && \
   apt-get install --no-install-recommends -y \
+  net-tools \
   libglib2.0-0 libjpeg62-turbo libpng16-16 libopenexr22 \
   libwebp6 libwebpmux2 libtiff5 libgif7 libexif12 libxml2 libpoppler-glib8 \
   libmagickwand-6.q16-3 libpango1.0-0 libmatio4 libopenslide0 \
