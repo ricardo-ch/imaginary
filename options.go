@@ -1,4 +1,4 @@
-package main
+package imaginary
 
 import "gopkg.in/h2non/bimg.v1"
 
